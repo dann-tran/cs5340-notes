@@ -9,11 +9,9 @@ import remarkMath from 'remark-math';
 const PostPage: React.FC<Post> = ({ metadata, markdownBody }) => (
   <div>
     <h1>{metadata.title}</h1>
-    <ReactMarkdown
-      children={markdownBody}
-      rehypePlugins={[rehypeKatex]}
-      remarkPlugins={[remarkMath]}
-    ></ReactMarkdown>
+    <ReactMarkdown rehypePlugins={[rehypeKatex]} remarkPlugins={[remarkMath]}>
+      {markdownBody}
+    </ReactMarkdown>
   </div>
 );
 

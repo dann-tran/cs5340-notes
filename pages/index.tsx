@@ -11,7 +11,7 @@ const IndexPage: React.FC<{ metadataList: Metadata[] }> = ({
   return (
     <ul>
       {metadataList.map((metadata) => (
-        <li>
+        <li key={metadata.slug}>
           <Link href={metadata.slug}>
             <a>{metadata.title}</a>
           </Link>
