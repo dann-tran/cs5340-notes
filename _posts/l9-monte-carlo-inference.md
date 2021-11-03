@@ -1,4 +1,6 @@
-# Monte Carlo Inference (Sampling)
+---
+title: Monte Carlo Inference (Sampling)
+---
 
 Sampling methods can be used to perform intractable integrations c e.g. normalization, marginalization, expectation.
 
