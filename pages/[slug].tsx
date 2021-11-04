@@ -1,26 +1,31 @@
-import { getPostSlugs, getPostBySlug } from 'lib/api';
-import { Post } from 'lib/models';
+import Layout from 'components/Layout';
+import { getAllPostMetadata, getPostBySlug, getPostSlugs } from 'lib/api';
+import { Metadata, Post } from 'lib/models';
 import { Params } from 'next/dist/server/router';
 import React from 'react';
 import ReactMarkdown from 'react-markdown';
 import rehypeKatex from 'rehype-katex';
 import remarkMath from 'remark-math';
 
-const PostPage: React.FC<Post> = ({ metadata, markdownBody }) => (
-  <div>
-    <h1>{metadata.title}</h1>
+const PostPage: React.FC<{ metadataList: Metadata[]; post: Post }> = ({
+  metadataList,
+  post,
+}) => (
+  <Layout title={post.metadata.title} metadataList={metadataList}>
+    <h1>{post.metadata.title}</h1>
     <ReactMarkdown rehypePlugins={[rehypeKatex]} remarkPlugins={[remarkMath]}>
-      {markdownBody}
+      {post.markdownBody}
     </ReactMarkdown>
-  </div>
+  </Layout>
 );
 
 export default PostPage;
 
 export async function getStaticProps({ params }: Params) {
-  const post = getPostBySlug(params.slug);
+  const metadataList = await getAllPostMetadata();
+  const post = await getPostBySlug(params.slug);
   return {
-    props: { ...post },
+    props: { metadataList, post },
   };
 }
 

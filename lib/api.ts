@@ -29,6 +29,6 @@ export function getAllPosts(): Post[] {
   return getPostSlugs().map(getPostBySlug);
 }
 
-export function getAllPostTitles(): Metadata[] {
+export function getAllPostMetadata(): Metadata[] {
   return getAllPosts().map((post) => post.metadata);
 }
