@@ -20,13 +20,17 @@ export function getPostBySlug(slug: string): Post {
     metadata: {
       slug,
       title: data.title,
+      tags: data.tags,
+      lectureNumber: parseInt(data.lectureNumber),
     },
     markdownBody: content,
   };
 }
 
 export function getAllPosts(): Post[] {
-  return getPostSlugs().map(getPostBySlug);
+  return getPostSlugs()
+    .map(getPostBySlug)
+    .sort((a, b) => a.metadata.lectureNumber - b.metadata.lectureNumber);
 }
 
 export function getAllPostMetadata(): Metadata[] {

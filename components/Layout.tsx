@@ -32,7 +32,7 @@ const Layout: React.FC<{
             </li>
           </ul>
           <div className={styles['contents']}>
-            <span>Contents</span>
+            <div className={styles['contents-header']}>Contents</div>
             <ol>
               {metadataList.map((metadata) => (
                 <li key={metadata.slug}>

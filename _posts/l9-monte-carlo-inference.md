@@ -1,5 +1,7 @@
 ---
 title: Monte Carlo Inference (Sampling)
+tags: inference
+lectureNumber: 9
 ---
 
 Sampling methods can be used to perform intractable integrations c e.g. normalization, marginalization, expectation.
@@ -8,13 +10,17 @@ Sampling methods can be used to perform intractable integrations c e.g. normaliz
 
 MC simulation draws an i.i.d. set of samples $\{x^{(i)}\}_{i=1}^N$ from a target density $p(x)$ defined on a high-dimenstional space $\mathcal{X}$. These $N$ samples can be used to approximate the target density with the empirical point-mass function
 
-$$p(x)\approx\frac{1}{N}\sum_{i=1}^N\mathcal{1}_{x^{(i)}}(x),$$
+$$
+p(x)\approx\frac{1}{N}\sum_{i=1}^N\mathcal{1}_{x^{(i)}}(x),
+$$
 
 where $\mathcal{1}_{x^{(i)}}(x)$ denotes indicator function at $x^{(i)}$.
 
 Consequently, to approximate expectation $\mathbb{E}_{x\sim p}[f(x)]$ with tractable sums $I_N$ that converge,
 
-$$\frac{1}{N}\sum_{i=1}^Nf(x^{(i)})=I_N\overset{\text{a.s.}}{\underset{N\rightarrow\infty}{\longrightarrow}}\mathbb{E}_{x\sim p}[f(x)]=\int_\mathcal{X}f(x)p(x)dx$$
+$$
+\frac{1}{N}\sum_{i=1}^Nf(x^{(i)})=I_N\overset{\text{a.s.}}{\underset{N\rightarrow\infty}{\longrightarrow}}\mathbb{E}_{x\sim p}[f(x)]=\int_\mathcal{X}f(x)p(x)dx
+$$
 
 - The estimate $I_N$ is unbiased, and by SLLN, it will almost surely (a.s.) to $I(f)$.
 - If the variance of $\text{Var}_{x\sim p}[f(x)]<\infty$, then $\text{Var}_{x^i\overset{\text{i.i.d.}}{\sim}p}[I_N]=\frac{1}{N}\text{Var}_{x\sim p}[f(x)]$.
@@ -44,9 +50,9 @@ To sample from prior $p(x)=\prod_{i=1}^M p(x_i|{\bf \pi}_i)$ of a DGM, simply sa
 
 - Calibrate the clique tree, which gives us the marginal distribution over each node, and choose a node to be the root.
 - To sample for each node:
-  1. Marginalize over variables to get the marginal for a single variable $p(X_1|E=e)$.
-  2. Sample $x_1\sim p(X_1|E=e)$ and incorporate $X_1=x_1$ as evidence.
-  3. Proceed with sampling $x_2\sim p(X_2=x_2|X_1=x_1, E=e)$, $x_3\sim p(X_3=x_3|X_1=x_1, X_2=x_2, E=e)$ and so on.
+  1. Marginalize over variables to get the marginal for a single variable $p(x_1|e)$.
+  2. Sample $x_1\sim p(x_1|e)$ and incorporate $X_1=x_1$ as evidence.
+  3. Proceed with sampling $x_2\sim p(x_2|x_1, e)$, $x_3\sim p(x_3|x_1, x_2, e)$ and so on.
 - When moving down the tree to sample variables from other nodes, each node must send an updated message containing the values of the sampled variables.
 
 ### Sample from a posterior
@@ -55,7 +61,9 @@ Suppose $X=Z\cup E$. To sample from posterior $p(z|e)$, use forwards sampling on
 
 $$p(e)=\sum_zp(e,z)dz=\sum_xp(x)\mathbb{1}_e(x)dx=\mathbb{E}_{x\sim p}[\mathbb{1}_e(x)]\approx\frac{1}{N}\sum_{i=1}^N\mathbb{1}_e(x^{(i)})$$
 
-$$p(z|e)=\frac{p(e,z)}{p(e)}\approx\frac{\frac{1}{N}\sum_{i=1}^{N}\mathbb{1}_{e,z}(x^{(i)})}{\frac{1}{N}\sum_{i=1}^N\mathbb{1}_{e}(x^{(i)})}=\frac{\sum \mathbb{1}_{e,z}(x^{(i)})}{\sum \mathbb{1}_{e}(x^{(i)})}$$
+$$
+p(z|e)=\frac{p(e,z)}{p(e)}\approx\frac{\frac{1}{N}\sum_{i=1}^{N}\mathbb{1}_{e,z}(x^{(i)})}{\frac{1}{N}\sum_{i=1}^N\mathbb{1}_{e}(x^{(i)})}=\frac{\sum \mathbb{1}_{e,z}(x^{(i)})}{\sum \mathbb{1}_{e}(x^{(i)})}
+$$
 
 where $\mathbb{1}_e(x)=\begin{cases}1&\text{if }x\text{ is consistent with }e \\0&\text{otherwise}\end{cases}$.
 
@@ -73,7 +81,7 @@ Choose $M<\infty$ such that $\tilde{p}(x)\leq Mq(x)$.
 
 ---
 
-**Rejection Sampling Algorithm**
+**Rejection sampling algo**
 
 Set $i=1$.
 
@@ -110,7 +118,9 @@ $$
 
 The Monte Carlo estimate is
 
-$$\hat{\mathbb{E}}_{x\sim p}[f(x)]=\frac{1}{N} \sum_{i=1}^N f(x^{(i)}) w(x^{(i)})$$
+$$
+\hat{\mathbb{E}}_{x\sim p}[f(x)]=\frac{1}{N} \sum_{i=1}^N f(x^{(i)}) w(x^{(i)})
+$$
 
 The variance of this new estimator is $\text{Var}[\hat{\mathbb{E}}_{x\sim p}[f(x)]]=\frac{1}{N}\text{Var}_{x \sim q}[f(x)w(x)]$ where
 
@@ -136,7 +146,9 @@ $$
 
 This lower bound can be attained by choosing _optimal importance distribution_
 
-$$q^*(x)=\frac{\vert f(x)\vert p(x)}{\int{\vert f(x)\vert p(x)}}$$
+$$
+q^*(x)=\frac{\vert f(x)\vert p(x)}{\int{\vert f(x)\vert p(x)}}
+$$
 
 If we can sample from this $q$ (and evaluate the corresponding weight), then we only need a single MC sample to compute the true value of our integral. However, sampling from such a $\tilde{q}(x)=\vert f(x)\vert p(x)$ is NP-hard in general. Nevertheless, this tells us that high sampling efficiency is achieved when we focus on sampling from $p(x)$ in the important regions where $\vert f(x)\vert p(x)$ is relatively large.
 
@@ -144,7 +156,9 @@ If we can sample from this $q$ (and evaluate the corresponding weight), then we 
 
 Assume only $\tilde{p}(x)$ can be evaluated, we then define $w(x)\triangleq\tilde{p}(x)/q(x)$. We have
 
-$$X_p=\int \tilde{p}(x)dx=\int \frac{\tilde{p}(x)}{q(x)}q(x)dx=\mathbb{E}_{x\sim q}[w(x)]$$
+$$
+X_p=\int \tilde{p}(x)dx=\int \frac{\tilde{p}(x)}{q(x)}q(x)dx=\mathbb{E}_{x\sim q}[w(x)]
+$$
 
 As a result,
 
@@ -196,7 +210,9 @@ MCMC is a strategy for generating samples $x^{(i)}$ while exploring the state sp
 
 Consider a discrete-time stochastic process $x^{(i)}$ is called a Markov chain if it satisfies the _Markov assumption_:
 
-$$p(x^{(i)}|x^{(i-1)}, ..., x^{1})=T(x^{(i)}|x^{(i-1)})$$
+$$
+p(x^{(i)}|x^{(i-1)}, ..., x^{(1)})=T(x^{(i)}|x^{(i-1)})
+$$
 
 The chain is _homogenous_ if $T\triangleq T(x^{(i)}|x^{(i-1)})$ remains invariant for all $i$, with $\sum_{x^{(i)}}T(x^{(i)}|x^{(i-1)})=1$ for any $i$.
 
@@ -219,19 +235,23 @@ In the case of continuuous variables, the Markov chain must be _ergodic_.
 
 A sufficient (but not necessary) condition that a particular distribution $p(x)$ is a stationary distribution is the following _detailed balance_ (reversibility) condition:
 
-$$p(x^{(i)})T(x^{(i-1)}|x^{(i)})=p(x^{(i-1)})T(x^{(i)}|x^{(i-1)}) \enspace \forall x^{(i-1)}$$
+$$
+p(x^{(i)})T(x^{(i-1)}|x^{(i)})=p(x^{(i-1)})T(x^{(i)}|x^{(i-1)}) \enspace \forall x^{(i-1)}
+$$
 
 Proof: summing both sides over $x^{(i-1)}$ gives us
 
-$$p(x^{(i)})=\sum_{x^{(i-1)}}p(x^{(i-1)})T(x^{(i)}|x^{(i-1)})$$
+$$
+p(x^{(i)})=\sum_{x^{(i-1)}}p(x^{(i-1)})T(x^{(i)}|x^{(i-1)})
+$$
 
 MCMC samplers are irreducible and aperiodic Markov chains that have the target distribution as the invariant distribution. One way to design these samplers is to ensure that detailed balance is satisfied.
 
 ### MCMC algorithms
 
-At a high level, MCMC algorithms will have the following structure. They take as argument a transition operator $T$ specifying a Markov chain whose stationary distribution is $p$ (unnormalised), and an initial assignment $x_0$ to the variables of $p$. An MCMC algorithm then perform the following steps.
+At a high level, MCMC algorithms will have the following structure. They take as argument a transition operator $T$ specifying a Markov chain whose stationary distribution is $p$ (unnormalised), and an initial assignment $x^{(0)}$ to the variables of $p$. An MCMC algorithm then perform the following steps.
 
-1. Run the Markov chain from $x_0$ for $B$ _burn-in_ steps.
+1. Run the Markov chain from $x^{(0)}$ for $B$ _burn-in_ steps.
 2. Run the Markov chain for $N$ _sampling_ steps and collect all the states that it visits.
 
 Assuming $B$ is sufficiently large, the latter collection of states will form samples from $p$. We may then use these samples for Monte Carlo integration (or in importance sampling). We may also use them to:
@@ -246,11 +266,13 @@ The Metropolis-Hastings (MH) algorithm is our first way to construct Markov chai
 - A transition kernel $q(x^*|x)$, that is our proposal distribution.
 - An acceptance probability for moving towards candidate value $x^*$ sampled from $q(x^*|x)$
 
-$$\mathcal{A}(x^*, x)=\min\left\{1, \frac{p(x^*)q(x|x^*)}{p(x)q(x^*|x)}\right\}$$
+$$
+\mathcal{A}(x^*, x)=\min\left\{1, \frac{p(x^*)q(x|x^*)}{p(x)q(x^*|x)}\right\}
+$$
 
 ---
 
-**Rejection Sampling Algorithm**
+**Metropolis-Hasting algo**
 
 1. Initialise $x^{(0)}$.
 2. For $i=0$ to $N-1$
@@ -270,11 +292,15 @@ This means that the MH algo will eventually produce samples from their stationar
 
 We shall prove that $p$ satisfies the detailed balance condition w.r.t the MH Markov chain. The transition kernel for the MH algorithm is
 
-$$T(x^{(i+1)}|x^{(i)})=q(x^{(i+1)}|x^{(i)})\mathcal{A}(x^{(i+1)}, x^{(i)})+\mathcal{1}_{x^{(i)}}(x^{(i+1)})r(x^{(i)})$$
+$$
+T(x^{(i+1)}|x^{(i)})=q(x^{(i+1)}|x^{(i)})\mathcal{A}(x^{(i+1)}, x^{(i)})+\mathcal{1}_{x^{(i)}}(x^{(i+1)})r(x^{(i)})
+$$
 
 where $r(x^{(i)})$ is the term associated with rejection
 
-$$r(x^{(i)})=\int_{\mathcal{X}}q(x^*|x^{(i)})(1-\mathcal{A}(x^*, x^{(i)}))dx^*$$
+$$
+r(x^{(i)})=\int_{\mathcal{X}}q(x^*|x^{(i)})(1-\mathcal{A}(x^*, x^{(i)}))dx^*
+$$
 
 Case 1: $x^{(i+1)}=x^{(i)}$ (candidate sample is rejected). Then the detailed balance condition is trivially evident.
 
@@ -298,9 +324,9 @@ To ensure that the MH algo converges:
 - Aperiodicity: no additional conditions since rejection is allowed.
 - Irreducibility: the support of $q$ must include the support of $p$.
 
-#### Fact 3: The normalising constant of the target distribution is not required.
+#### Fact 2: The normalising constant of the target distribution is not required.
 
-#### Fact 4: Success of failure of the algo often hinges on the choice of $q$.
+#### Fact 3: Success of failure of the algo often hinges on the choice of $q$.
 
 - If the proposal is too narrow, only one mode of $p$ might be visited.
 - If the proposal is too wide, the rejection rate can be very high, resulting in high correlations.
@@ -313,7 +339,9 @@ Below shows approximations obtained using the MH algorithm with three Gaussian p
 
 In the independent sampler, the proposal is independent of the current state, $q(x^*|x^{(i)})=q(x^*)$. Hence the acceptance probability is
 
-$$\mathcal{A}(x^*, x^{(i)})=\min\left\{1, \frac{p(x^*)q(x^{(i)})}{p(x^{i})q(x^*)}\right\}=\min\left\{1, \frac{w(x^*)}{w(x^{(i)})}\right\}$$
+$$
+\mathcal{A}(x^*, x^{(i)})=\min\left\{1, \frac{p(x^*)q(x^{(i)})}{p(x^{i})q(x^*)}\right\}=\min\left\{1, \frac{w(x^*)}{w(x^{(i)})}\right\}
+$$
 
 This algo is close to importance sampling, but now the samples are correlated since they result from comparing one sample to the other.
 
@@ -321,7 +349,9 @@ This algo is close to importance sampling, but now the samples are correlated si
 
 The Metropolis algo assumes a symmetric random walk proposal $q(x^*|x^{(i)})=q(x^{(i)}|x^*)$ e.g. isotropic Gaussian. The acceptance ratio simplifies to
 
-$$\mathcal{A}(x^*, x^{(i)})=\min\left\{1, \frac{p(x^*)}{p(x^{i})}\right\}$$
+$$
+\mathcal{A}(x^*, x^{(i)})=\min\left\{1, \frac{p(x^*)}{p(x^{i})}\right\}
+$$
 
 ### Gibbs sampler
 

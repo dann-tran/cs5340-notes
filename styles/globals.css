@@ -6,7 +6,7 @@ body {
 }
 
 h1 {
-  margin: 0 0 auto 0;
+  margin: 0 0 0.5rem 0;
 }
 
 a {
@@ -23,6 +23,10 @@ img {
   margin: 0 auto;
   max-width: 80%;
   max-height: 100%;
+}
+
+li {
+  margin-bottom: 0.5rem;
 }
 
 * {
