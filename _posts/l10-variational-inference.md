@@ -18,18 +18,18 @@ Main differences between sampling and variational techniques:
 
 Setup:
 
-- Observed data $\mathcal D=\{\mathbf x_i\}_{i=1}^N$.
-- Latent variables $\mathbf z$.
-- Target distribution is the posterior $p(\mathbf z)=p(\mathbf z|\mathcal D)$.
-- Unnormalized target distribution is the joint density $\tilde p(\mathbf z)=p(\mathbf z, \mathcal D)$.
-- Normalisation constant is the likelihood $Z=p(\mathcal D)=\int_{\mathcal Z} p(\mathbf z, \mathcal D)$
+- Observed data $\mathcal D$.
+- Latent, unobserved variables $\mathbf x$.
+- Target distribution is the posterior $p(\mathbf x)=p(\mathbf x|\mathcal D)$.
+- Unnormalized target distribution is the joint density $\tilde p(\mathbf x)=p(\mathbf x, \mathcal D)$.
+- Normalisation constant is the likelihood $Z=p(\mathcal D)=\int_{\mathcal Z} p(\mathbf x, \mathcal D)$
 
 ### The Kullback-Leibler (KL) divergence
 
 To formulate inference as an optimization problem, we need to choose an approximating family $Q$ and an optimization objective $J(q)$, for which the KL divergence is a candidate. The KL divergence between two distributions $q$ and $p$ with discrete support is defined as
 
 $$
-\text{KL}(q\|p)=\sum_{\mathbf z} q(x)\log\frac{q(\mathbf z)}{p(\mathbf z)}=\mathbb{E}_q\left[\log\frac{q(\mathbf z)}{p(\mathbf z)}\right]
+\text{KL}(q\|p)=\sum_{\mathbf x} q(x)\log\frac{q(\mathbf x)}{p(\mathbf x)}=\mathbb{E}_q\left[\log\frac{q(\mathbf x)}{p(\mathbf x)}\right]
 $$
 
 Properties:
@@ -43,7 +43,7 @@ Properties:
 Assume that $p$ can be evaluated up to a normalization constant. Optimizing $KL(q\|p)$ directly is not possible because of the potentially intractable normalization constant $Z$. Instead, we'll work with the unnormalized probability $\tilde p$
 
 $$
-J(q)\triangleq\text{KL}(q\|\tilde{p})=\sum_{\mathcal Z} q(\mathbf z)\log\frac{q(\mathbf z)}{\tilde{p}(\mathbf z)}
+J(q)\triangleq\text{KL}(q\|\tilde{p})=\sum_{\mathcal Z} q(\mathbf x)\log\frac{q(\mathbf x)}{\tilde{p}(\mathbf x)}
 $$
 
 Not only is this function tractable, but it also has the following important property
@@ -51,8 +51,8 @@ Not only is this function tractable, but it also has the following important pro
 $$
 \begin{align*}
 J(q)
-&= \sum_{\mathcal Z} q(\mathbf z)\log\frac{q(\mathbf z)}{\tilde{p}(\mathbf z)} \\
-&= \sum_{\mathcal Z} q(\mathbf z)\log\frac{q(\mathbf z)}{p(\mathbf z)}-\log Z \\
+&= \sum_{\mathcal Z} q(\mathbf x)\log\frac{q(\mathbf x)}{\tilde{p}(\mathbf x)} \\
+&= \sum_{\mathcal Z} q(\mathbf x)\log\frac{q(\mathbf x)}{p(\mathbf x)}-\log Z \\
 &= \text{KL}(q\|p)-\log Z
 \end{align*}
 $$
@@ -82,9 +82,9 @@ Another formuation of $J(q)$ as the expected NLL plus a penalty term that measur
 $$
 \begin{align*}
 J(q)
-&=\mathbb E_q[\log q(\mathbf z)-\log p(\mathbf z)p(\mathcal D|\mathbf z)] \\
-&=\mathbb E_q[\log q(\mathbf z)-\log p(\mathbf z) - \log p(\mathcal D|\mathbf z)] \\
-&=\mathbb E_q[-\log p(\mathcal D|\mathbf z)]+\text{KL}(q\|p)
+&=\mathbb E_q[\log q(\mathbf x)-\log p(\mathbf x)p(\mathcal D|\mathbf x)] \\
+&=\mathbb E_q[\log q(\mathbf x)-\log p(\mathbf x) - \log p(\mathcal D|\mathbf x)] \\
+&=\mathbb E_q[-\log p(\mathcal D|\mathbf x)]+\text{KL}(q\|p)
 \end{align*}
 $$
 
@@ -96,15 +96,15 @@ Computational-wise, optimizing $\text{KL}(q\|p)$ involves an expectation w.r.t. 
 
 First, consider the reverse KL, $\text{KL}(q\|p)$, aka an I-projection or information projection,
 
-$$\text{KL}(q\|p)=\sum_xq(\mathbf z)\log\frac{q(\mathbf z)}{p(\mathbf z)}$$
+$$\text{KL}(q\|p)=\sum_xq(\mathbf x)\log\frac{q(\mathbf x)}{p(\mathbf x)}$$
 
-This is is infinite if $p(x)=0$ and $q(x)>0$. Thus if $p(\mathbf z)=0$ we must ensure $q(\mathbf z)=0$. We say that $\text{KL}(q\|p)$ is _zero-forcing_ for $q$ and it will typically under-estimate the support of $p$.
+This is is infinite if $p(x)=0$ and $q(x)>0$. Thus if $p(\mathbf x)=0$ we must ensure $q(\mathbf x)=0$. We say that $\text{KL}(q\|p)$ is _zero-forcing_ for $q$ and it will typically under-estimate the support of $p$.
 
 Now consider the forwards KL, $\text{KL}(p\|q)$, aka an M-projection or momemt project,
 
-$$\text{KL}(p\|q)=\sum_xp(\mathbf z)\log\frac{p(\mathbf z)}{q(\mathbf z)}$$
+$$\text{KL}(p\|q)=\sum_xp(\mathbf x)\log\frac{p(\mathbf x)}{q(\mathbf x)}$$
 
-This is infinite if $q(\mathbf z)=0$ and $p(\mathbf z)>0$. Thus, if $p(\mathbf z)>0$ we must ensure $q(\mathbf z)>0$. We say that $\text{KL}(p\|q)$ is z*ero-avoiding* for $q$ and it will typically over-estimate the support of $p$.
+This is infinite if $q(\mathbf x)=0$ and $p(\mathbf x)>0$. Thus, if $p(\mathbf x)>0$ we must ensure $q(\mathbf x)>0$. We say that $\text{KL}(p\|q)$ is z*ero-avoiding* for $q$ and it will typically over-estimate the support of $p$.
 
 The difference between these methods is illustrated in the figure below, where $p$ is the blue contours and $q$ red. We see that when the true distribution is multimodal, using the forwards KL is a bad idea (assuming $q$ is unimodal), since the resulting poster mode/mean will be in a region of low density, right between the two peaks.
 
@@ -114,7 +114,7 @@ The difference between these methods is illustrated in the figure below, where $
 
 The next step in our development of variational inference concerns the choice of approximating family $\mathcal Q$. One of the most popular forms is called the _mean-field_ approximation. In this approach, we assume the posterior is a fully factorized approximation of the form
 
-$$q(\mathbf z)=\prod_i q_i(\mathbf z_i)$$
+$$q(\mathbf x)=\prod_i q_i(\mathbf x_i)$$
 
 Our goal is to solve this optimization problem:
 
@@ -132,11 +132,11 @@ $$
 
 Notice that:
 
-- Both sides of the above equation contain univariate functions of $\mathbf z_j$: we are thus replacing $q(x_j)$ with another function of the same form. The constant term is a normalization constant for the new distribution.
-- On the right-hand side, we are taking an expectation of a sum of factors $\log\tilde p(\mathbf z)=\sum_k\log\phi(\mathbf z_k)$. Only factors belonging to the Markov blanket of $\mathbf z_j$ are a function of $x_j$; the rest are constant w.r.t $\mathbf z_j$ and can be pushed to the constant term. Sicne we are replacing the neigghbouring values by their mean value, the method is known is mean field.
+- Both sides of the above equation contain univariate functions of $\mathbf x_j$: we are thus replacing $q(x_j)$ with another function of the same form. The constant term is a normalization constant for the new distribution.
+- On the right-hand side, we are taking an expectation of a sum of factors $\log\tilde p(\mathbf x)=\sum_k\log\phi(\mathbf x_k)$. Only factors belonging to the Markov blanket of $\mathbf x_j$ are a function of $x_j$; the rest are constant w.r.t $\mathbf x_j$ and can be pushed to the constant term. Sicne we are replacing the neigghbouring values by their mean value, the method is known is mean field.
 - Tis leaves us with an expectation over a much smaller number of factors.
 
-The result of this is a procedure that iteratively fits a fully-factored $q(\mathbf z)=\prod_ip_i(\mathbf z_i)$ that approximates $p$ in terms of $\text{KL}(q\|p)$. After each step of coordinate descent, we increase the variational lower bound, tightening it around $\log Z$. In the end, the factors $q_j(\mathbf z_j)$ will not quite equal the true marginal distributions $p(\mathbf z_j)$, but they will often be good enough for many practical purposes, such as determining $\max_{\mathbf z_j} p(\mathbf z_j)$.
+The result of this is a procedure that iteratively fits a fully-factored $q(\mathbf x)=\prod_ip_i(\mathbf x_i)$ that approximates $p$ in terms of $\text{KL}(q\|p)$. After each step of coordinate descent, we increase the variational lower bound, tightening it around $\log Z$. In the end, the factors $q_j(\mathbf x_j)$ will not quite equal the true marginal distributions $p(\mathbf x_j)$, but they will often be good enough for many practical purposes, such as determining $\max_{\mathbf x_j} p(\mathbf x_j)$.
 
 ### Derivation of the mean-field update equations
 
@@ -145,20 +145,20 @@ We will maximize $\mathcal L(q)$ w.r.t. one $q_j$ term at a time. Single out the
 $$
 \begin{align*}
 \mathcal L(q_j)
-&= \sum_{\mathcal Z}\prod_iq_i(\mathbf z_i)\left[\log\tilde p(\mathbf z)-\sum_k\log q_k(\mathbf z_k)\right] \\
-&= \sum_{\mathbf z_j}\sum_{\mathbf z_{-j}}q_j(\mathbf z_j)\prod_{i\neq j}q_i(\mathbf z_i)\left[\log\tilde p(\mathbf z)-\sum_k\log q_k(\mathbf z_k)\right] \\
-&= \sum_{\mathbf z_j}q_j(\mathbf z_j)\sum_{\mathbf z_{-j}}\prod_{i\neq j}q_i(\mathbf z_i)\log\tilde p(\mathbf z) - \sum_{\mathbf z_j}q_j(\mathbf z_j)\sum_{\mathbf x_{-j}}\prod_{i\neq j}q_i\left[\log q_j(\mathbf z_j)+\sum_{k\neq j}\log q_k(\mathbf z_k)\right] \\
-&= \sum_{\mathbf z_j}q_j\log f_j(\mathbf z_j) - \sum_{\mathbf z_j}q_j\log q_j(\mathbf z_j) + \text{const}
+&= \sum_{\mathcal Z}\prod_iq_i(\mathbf x_i)\left[\log\tilde p(\mathbf x)-\sum_k\log q_k(\mathbf x_k)\right] \\
+&= \sum_{\mathbf x_j}\sum_{\mathbf x_{-j}}q_j(\mathbf x_j)\prod_{i\neq j}q_i(\mathbf x_i)\left[\log\tilde p(\mathbf x)-\sum_k\log q_k(\mathbf x_k)\right] \\
+&= \sum_{\mathbf x_j}q_j(\mathbf x_j)\sum_{\mathbf x_{-j}}\prod_{i\neq j}q_i(\mathbf x_i)\log\tilde p(\mathbf x) - \sum_{\mathbf x_j}q_j(\mathbf x_j)\sum_{\mathbf x_{-j}}\prod_{i\neq j}q_i\left[\log q_j(\mathbf x_j)+\sum_{k\neq j}\log q_k(\mathbf x_k)\right] \\
+&= \sum_{\mathbf x_j}q_j\log f_j(\mathbf x_j) - \sum_{\mathbf x_j}q_j\log q_j(\mathbf x_j) + \text{const}
 \end{align*}
 $$
 
 where
 
 $$
-\log f_j(\mathbf z_j)\triangleq\sum_{\mathbf x_{-j}}\prod_{i\neq j}q_i(\mathbf z_i)\log\tilde p(\mathbf z)=\mathbb E_{q_{-j}}[\log\tilde p(\mathbf z)]
+\log f_j(\mathbf x_j)\triangleq\sum_{\mathbf x_{-j}}\prod_{i\neq j}q_i(\mathbf x_i)\log\tilde p(\mathbf x)=\mathbb E_{q_{-j}}[\log\tilde p(\mathbf x)]
 $$
 
-So we average out all the hidden variables except for $\mathbf z_j$. We can thus rewrite $\mathcal L(q_j)$ as follows
+So we average out all the hidden variables except for $\mathbf x_j$. We can thus rewrite $\mathcal L(q_j)$ as follows
 
 $$
 \mathcal L(q_j) = -\text{KL}(q_j\|f_j)
@@ -168,15 +168,15 @@ We can maximize $\mathcal L$ by minimizing this KL, which we can do by setting $
 
 $$
 \begin{align*}
-q_j(\mathbf z_j)&=\frac 1 {Z_j}\exp(\mathbf E_{q_{-j}}[\log\tilde p(\mathbf z)])
+q_j(\mathbf x_j)&=\frac 1 {Z_j}\exp(\mathbf E_{q_{-j}}[\log\tilde p(\mathbf x)])
 \\
-\log q_j(\mathbf z_j)&=\mathbf E_{q_{-j}}[\log\tilde p(\mathbf z)]-\log Z_j
+\log q_j(\mathbf x_j)&=\mathbf E_{q_{-j}}[\log\tilde p(\mathbf x)]-\log Z_j
 \end{align*}
 $$
 
-The additive constant $Z_j$ is set by normalizing $\exp(\mathbf E_{q_{-j}}[\log\tilde p(\mathbf z)])$.
+The additive constant $Z_j$ is set by normalizing $\exp(\mathbf E_{q_{-j}}[\log\tilde p(\mathbf x)])$.
 
-The functional form of the $q_j$ distributions will be determined by the type of variables $\mathbf z_j$, as well as the form of the model. This is sometimes called free-form optimization. If $z_j$ is a discrete r.v., then $q_j$ will be a discrete distributions; if $\mathbf z_j$ is a continuous random variable, then $q_j$ will be some kind of pdf.
+The functional form of the $q_j$ distributions will be determined by the type of variables $\mathbf x_j$, as well as the form of the model. This is sometimes called free-form optimization. If $z_j$ is a discrete r.v., then $q_j$ will be a discrete distributions; if $\mathbf x_j$ is a continuous random variable, then $q_j$ will be some kind of pdf.
 
 ### Ising model
 
