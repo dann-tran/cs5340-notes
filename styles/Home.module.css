@@ -2,7 +2,11 @@
   font-size: small;
 }
 
-.contents ol {
+.index-page-contents ol {
   list-style-type: none;
   padding-left: 0.5rem;
+}
+
+.index-page-contents li {
+  margin-bottom: 0.35rem;
 }

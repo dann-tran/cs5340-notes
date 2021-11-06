@@ -1,5 +1,5 @@
 ---
 title: Hidden Markov Models (HMMs)
-tags: modelling, inference, learning
+tag: modelling
 lectureNumber: 8
 ---

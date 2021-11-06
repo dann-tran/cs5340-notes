@@ -1,5 +1,5 @@
 ---
 title: Parameter Learning with Complete Data
-tags: learning
+tag: learning
 lectureNumber: 6
 ---

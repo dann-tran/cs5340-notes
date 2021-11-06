@@ -1,10 +1,18 @@
 ---
 title: Monte Carlo Inference (Sampling)
-tags: inference
+tag: approximate inference
 lectureNumber: 9
 ---
 
-Sampling methods can be used to perform intractable integrations c e.g. normalization, marginalization, expectation.
+Some integrations required by Bayesiam statistics could be intractable e.g. normalization, marginalization, expectation. Reasons:
+
+- The dimensionality is too high in the latent space to work with directly.
+- The posterior distribution has a highly complext form for which expectations are not analytically tractable.
+
+In such situations, we need to resort to approximation schemes, and these fall broadly into two classes:
+
+- Stochastic approximation: Markov Chain Monte-Carlo (MCMC)
+- Deterministic approximation: [Variational approach](/l10-variational-inference)
 
 ## The Monte Carlo principle
 
@@ -26,7 +34,9 @@ $$
 - If the variance of $\text{Var}_{x\sim p}[f(x)]<\infty$, then $\text{Var}_{x^i\overset{\text{i.i.d.}}{\sim}p}[I_N]=\frac{1}{N}\text{Var}_{x\sim p}[f(x)]$.
 - CLT yields convergence in distribution of the error $\sqrt{N}(I_N-\mathbb{E}_{x\sim p}[f(x)])\underset{N\rightarrow\infty}{\implies}\mathcal{N}(0, \sigma_f^2)$.
 
-## Standard distributions
+## Some basic sampling strategies
+
+### Standard distributions
 
 To sample from $p(x)$ with a closed-form inverse CDF:
 
@@ -40,9 +50,9 @@ In the case of a multinomial distribution with $k$ possible outcomes and associa
 
 ![Reducing sampling from a multinomial distribution to sampling a uniform distribution in $[0, 1]$](multinomial-sampling.png)
 
-## Forward Sampling (aka Ancestral Sampling)
+### Forward sampling (aka Ancestral sampling)
 
-### Sample from a prior
+#### Sample from a prior
 
 To sample from prior $p(x)=\prod_{i=1}^M p(x_i|{\bf \pi}_i)$ of a DGM, simply sample nodes in topological order, conditioned on the sampled values of the parent nodes.
 
@@ -55,7 +65,7 @@ To sample from prior $p(x)=\prod_{i=1}^M p(x_i|{\bf \pi}_i)$ of a DGM, simply sa
   3. Proceed with sampling $x_2\sim p(x_2|x_1, e)$, $x_3\sim p(x_3|x_1, x_2, e)$ and so on.
 - When moving down the tree to sample variables from other nodes, each node must send an updated message containing the values of the sampled variables.
 
-### Sample from a posterior
+#### Sample from a posterior
 
 Suppose $X=Z\cup E$. To sample from posterior $p(z|e)$, use forwards sampling on prior $p(x)$ and throw away all samples that are inconsistent with $e$ (i.e. logic sampling, which can be considered a special case of rejections sampling). Formally,
 
@@ -69,7 +79,7 @@ where $\mathbb{1}_e(x)=\begin{cases}1&\text{if }x\text{ is consistent with }e \\
 
 Drawback: the overall probability of accepting a sample from the posterior decreases rapidly as the number of observed variables increases and as the number of states that those variables can take increases.
 
-## Rejection sampling
+### Rejection sampling
 
 Suppose that:
 
@@ -99,7 +109,7 @@ Limitations:
 - It is not always possible to bound $p(x)/q(x)$ within a reasonable constant $M$ over the whole sapce $\mathcal{X}$.
 - If $M$ is too large, the acceptance probability $\text{Pr}(x\text{ accepted})=\text{Pr}\left(u<\frac{\tilde{p}(x)}{Mq(x)}\right)\approx\frac{1}{M}$ will be too small.
 
-## Importance sampling
+### Importance sampling
 
 Importance sampling takes all samples drawn from $q$ and reweigh them with _importance weights_. We must assume that the support of $q(x)$ includes the support of $p(x)$.
 
@@ -395,10 +405,15 @@ For graphical models, full conditionals reduces to conditonals on Markov blanket
 
 ### Monte carlo EM
 
+## Limitations
+
+- Although sampling-based inference algos are guaranteed to find a globally optimal solution given enough time, it is difficult to tell how close they are to a good solution given the finite amount of time that they have in practice.
+- In order to quickly reach a good solution, MCMC methods require choosing an appropriate sampling technique (e.g., a good proposal in Metropolis-Hastings). Choosing this technique can be an art in itself.
+
 ## Reference materials
 
 - Andrieu, C., de Freitas, N., Doucet A., Jordan, M. I. "An Introduction to MCMC for Machine Learning." _Machine Learning_, 50, 5-43, 2003. Accessed Nov 2, 2021. https://link.springer.com/content/pdf/10.1023/A:1020281327116.pdf.
-- Kuleshov, V. and Ermon, S. "Sample methods." _cs228-notes_. Accessed Nov 2, 2021. https://ermongroup.github.io/cs228-notes/inference/sampling/.
+- Kuleshov, V. and Ermon, S. "Sample methods." _CS228 notes_. Accessed Nov 2, 2021. https://ermongroup.github.io/cs228-notes/inference/sampling/.
 - Owen, A. "Importance sampling." _Monte Carlo theory, methods and examples_. Accessed Nov 2, 2021. https://statweb.stanford.edu/~owen/mc/Ch-var-is.pdf.
 - Mauser, K. "Why does the Metropolis-Hastings procedure satisfy the detailed balance criterion?" _Kris Hauser_. Accessed Nov 2, 2021. https://people.duke.edu/~kh269/teaching/notes/MetropolisExplanation.pdf.
 - Bishop, C. "Sample methods." _Pattern Recognition and Machine Learning_.

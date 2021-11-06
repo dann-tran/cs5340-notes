@@ -1,5 +1,5 @@
 ---
 title: Bayesian Networks (Directed Graphical Models)
-tags: representation
+tag: representation
 lectureNumber: 2
 ---

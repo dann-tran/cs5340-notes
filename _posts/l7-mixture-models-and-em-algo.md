@@ -1,6 +1,6 @@
 ---
 title: Mixture Models and the EM Algorithm
-tags: learning
+tag: learning
 lectureNumber: 7
 ---
 
@@ -178,3 +178,8 @@ Convergence is guaranteed for EM because:
 - The marginal likelihood is upper-bounded by its true global maximum
 
 However, since the objective is non-convex, we have no gurantee to find the global optimum. In fact, EM in practice converges almost always to a local optimum, and moreover, that optimum heavily depends on the choice of initialization. Thus it is very common to use multiple restarts of the algorithm and choose the best one in the end.
+
+## Reference materials
+
+- Murphy, K. P. "Mixture Models and the EM Algorithm." _Machine Learning: A Probabilistic Perspective_.
+- Kuleshov, V. and Ermon, S. "Learning in latent variable models." _cs228-notes_. Accessed Nov 5, 2021. https://ermongroup.github.io/cs228-notes/learning/latent/.

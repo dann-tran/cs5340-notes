@@ -6,6 +6,6 @@ export interface Post {
 export interface Metadata {
   slug: string;
   title: string;
-  tags: string;
+  tag: string;
   lectureNumber: number;
 }

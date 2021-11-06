@@ -20,7 +20,7 @@ export function getPostBySlug(slug: string): Post {
     metadata: {
       slug,
       title: data.title,
-      tags: data.tags,
+      tag: data.tag,
       lectureNumber: parseInt(data.lectureNumber),
     },
     markdownBody: content,

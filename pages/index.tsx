@@ -30,7 +30,7 @@ const IndexPage: React.FC<{ metadataList: Metadata[] }> = ({
           <a href='mailto: dann.tran@u.nus.edu'>dann.tran@u.nus.edu</a>.
         </p>
       </section>
-      <section className={styles['contents']}>
+      <section className={styles['index-page-contents']}>
         <h2>Table of Contents</h2>
         <ol>
           {metadataList.map((metadata) => (
@@ -38,7 +38,7 @@ const IndexPage: React.FC<{ metadataList: Metadata[] }> = ({
               <Link href={metadata.slug}>
                 <a>{metadata.title}</a>
               </Link>
-              <div className={styles['tags']}>{metadata.tags}</div>
+              <div className={styles['tags']}>{metadata.tag}</div>
             </li>
           ))}
         </ol>

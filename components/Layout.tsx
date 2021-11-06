@@ -31,8 +31,8 @@ const Layout: React.FC<{
               </Link>
             </li>
           </ul>
-          <div className={styles['contents']}>
-            <div className={styles['contents-header']}>Contents</div>
+          <div className={styles['navbar-contents']}>
+            <div className={styles['navbar-contents-header']}>Contents</div>
             <ol>
               {metadataList.map((metadata) => (
                 <li key={metadata.slug}>

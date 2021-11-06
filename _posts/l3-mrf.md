@@ -1,5 +1,5 @@
 ---
 title: Markov Random Fields (Undirected Graphical Models)
-tags: representation
+tag: representation
 lectureNumber: 3
 ---

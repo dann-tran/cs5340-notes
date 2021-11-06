@@ -1,5 +1,5 @@
 ---
 title: Variational Autoencoder and Mixture Density Networks
-tags: modelling, inference, learning
+tag: modelling
 lectureNumber: 11
 ---

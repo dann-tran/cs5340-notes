@@ -1,5 +1,5 @@
 ---
 title: Variable Elimination and Belief Propogation
-tags: inference
+tag: exact inference
 lectureNumber: 4
 ---

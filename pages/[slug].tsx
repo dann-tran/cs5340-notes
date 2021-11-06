@@ -6,6 +6,7 @@ import React from 'react';
 import ReactMarkdown from 'react-markdown';
 import rehypeKatex from 'rehype-katex';
 import remarkMath from 'remark-math';
+import styles from 'styles/Home.module.css';
 
 const PostPage: React.FC<{ metadataList: Metadata[]; post: Post }> = ({
   metadataList,

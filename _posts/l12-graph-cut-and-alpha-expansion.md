@@ -1,5 +1,5 @@
 ---
 title: Graph-Cut and Alpha-Expansion
-tags: modelling, learning, inference
+tag: modelling
 lectureNumber: 12
 ---
