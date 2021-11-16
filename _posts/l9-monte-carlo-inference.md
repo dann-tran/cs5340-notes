@@ -16,23 +16,21 @@ In such situations, we need to resort to approximation schemes, and these fall b
 
 ## The Monte Carlo principle
 
-MC simulation draws an i.i.d. set of samples $\{x^{(i)}\}_{i=1}^N$ from a target density $p(x)$ defined on a high-dimenstional space $\mathcal{X}$. These $N$ samples can be used to approximate the target density with the empirical point-mass function
+MC simulation draws an i.i.d. set of samples $\{x^{(n)}\}_{n=1}^N$ from a target density $p(x)$ defined on a high-dimenstional space $\mathcal{X}$. These $N$ samples can be used to approximate the target density with the empirical point-mass function
 
 $$
-p(x)\approx\frac{1}{N}\sum_{i=1}^N\mathcal{1}_{x^{(i)}}(x),
+p(x)\approx\frac{1}{N}\sum_{n=1}^N\mathbb I(x=x^{(n)})
 $$
 
-where $\mathcal{1}_{x^{(i)}}(x)$ denotes indicator function at $x^{(i)}$.
-
-Consequently, to approximate expectation $\mathbb{E}_{x\sim p}[f(x)]$ with tractable sums $I_N$ that converge,
+Consequently, to approximate expectation $\mathbb{E}_p[f(x)]$ with tractable sums $I_N$ that converge,
 
 $$
-\frac{1}{N}\sum_{i=1}^Nf(x^{(i)})=I_N\overset{\text{a.s.}}{\underset{N\rightarrow\infty}{\longrightarrow}}\mathbb{E}_{x\sim p}[f(x)]=\int_\mathcal{X}f(x)p(x)dx
+\frac{1}{N}\sum_{n=1}^If(x^{(n)})=I_N\overset{\text{a.s.}}{\underset{N\rightarrow\infty}{\longrightarrow}}\mathbb{E}_p[f(x)]=\int_\mathcal{X}f(x)p(x)dx
 $$
 
 - The estimate $I_N$ is unbiased, and by SLLN, it will almost surely (a.s.) to $I(f)$.
-- If the variance of $\text{Var}_{x\sim p}[f(x)]<\infty$, then $\text{Var}_{x^i\overset{\text{i.i.d.}}{\sim}p}[I_N]=\frac{1}{N}\text{Var}_{x\sim p}[f(x)]$.
-- CLT yields convergence in distribution of the error $\sqrt{N}(I_N-\mathbb{E}_{x\sim p}[f(x)])\underset{N\rightarrow\infty}{\implies}\mathcal{N}(0, \sigma_f^2)$.
+- If the variance of $\text{Var}_p[f(x)]<\infty$, then $\text{Var}_{x^i\overset{\text{i.i.d.}}{\sim}p}[I_N]=\frac 1 N\text{Var}_p[f(x)]$.
+- CLT yields convergence in distribution of the error $\sqrt{N}(I_N-\mathbb{E}_p[f(x)])\underset{N\rightarrow\infty}{\implies}\mathcal{I}(0, \sigma_f^2)$.
 
 ## Some basic sampling strategies
 
@@ -69,13 +67,13 @@ To sample from prior $p(x)=\prod_{i=1}^M p(x_i|{\bf \pi}_i)$ of a DGM, simply sa
 
 Suppose $X=Z\cup E$. To sample from posterior $p(z|e)$, use forwards sampling on prior $p(x)$ and throw away all samples that are inconsistent with $e$ (i.e. logic sampling, which can be considered a special case of rejections sampling). Formally,
 
-$$p(e)=\sum_zp(e,z)dz=\sum_xp(x)\mathbb{1}_e(x)dx=\mathbb{E}_{x\sim p}[\mathbb{1}_e(x)]\approx\frac{1}{N}\sum_{i=1}^N\mathbb{1}_e(x^{(i)})$$
+$$p(e)=\sum_zp(e,z)dz=\sum_xp(x)\delta_e(x)dx=\mathbb{E}_p[\delta_e(x)]\approx\frac 1 N\sum_{n=1}^N\delta_e(x^{(n)})$$
 
 $$
-p(z|e)=\frac{p(e,z)}{p(e)}\approx\frac{\frac{1}{N}\sum_{i=1}^{N}\mathbb{1}_{e,z}(x^{(i)})}{\frac{1}{N}\sum_{i=1}^N\mathbb{1}_{e}(x^{(i)})}=\frac{\sum \mathbb{1}_{e,z}(x^{(i)})}{\sum \mathbb{1}_{e}(x^{(i)})}
+p(z|e)=\frac{p(e,z)}{p(e)}\approx\frac{\frac 1 N\sum_{n=1}^{N}\delta_{e,z}(x^{(n)})}{\frac 1 N\sum_{n=1}^N\delta_{e}(x^{(n)})}=\frac{\sum \delta_{e,z}(x^{(n)})}{\sum \delta_{e}(x^{(n)})}
 $$
 
-where $\mathbb{1}_e(x)=\begin{cases}1&\text{if }x\text{ is consistent with }e \\0&\text{otherwise}\end{cases}$.
+where $\delta_e(x)=\begin{cases}1&\text{if }x\text{ is consistent with }e \\0&\text{otherwise}\end{cases}$ is the Dirac measure on $e$.
 
 Drawback: the overall probability of accepting a sample from the posterior decreases rapidly as the number of observed variables increases and as the number of states that those variables can take increases.
 
@@ -119,38 +117,38 @@ When $p(x)$ can be evaluated, we can define $w(x)\triangleq p(x)/q(x)$. We thus 
 
 $$
 \begin{align*}
-\mathbb{E}_{x \sim p}[f(x)]
+\mathbb{E}_p[f(x)]
 &= \int f(x)p(x)dx \\
 &= \int f(x) \frac{p(x)}{q(x)} q(x) dx \\
-&= \mathbb{E}_{x\sim q}[f(x)w(x)]
+&= \mathbb{E}_q[f(x)w(x)]
 \end{align*}
 $$
 
 The Monte Carlo estimate is
 
 $$
-\hat{\mathbb{E}}_{x\sim p}[f(x)]=\frac{1}{N} \sum_{i=1}^N f(x^{(i)}) w(x^{(i)})
+\hat{\mathbb{E}}_p[f(x)]=\frac 1 N \sum_{n=1}^N f(x^{(n)}) w(x^{(n)})
 $$
 
-The variance of this new estimator is $\text{Var}[\hat{\mathbb{E}}_{x\sim p}[f(x)]]=\frac{1}{N}\text{Var}_{x \sim q}[f(x)w(x)]$ where
+The variance of this new estimator is $\text{Var}[\hat{\mathbb{E}}_p[f(x)]]=\frac 1 N\text{Var}_q[f(x)w(x)]$ where
 
 $$
 \begin{align*}
-\text{Var}_{x \sim q}[f(x)w(x)]
-&= \mathbb{E}_{x\sim q}\left[\left(f(x)w(x)\right)^2\right] - \mathbb{E}_{x\sim q}[f(x)w(x)]^2 \\
-&= \mathbb{E}_{x\sim q}\left[\left(f(x)w(x)\right)^2\right] - \mathbb{E}_{x\sim p}[f(x)]^2 \\
+\text{Var}_q[f(x)w(x)]
+&= \mathbb{E}_q\left[\left(f(x)w(x)\right)^2\right] - \mathbb{E}_q[f(x)w(x)]^2 \\
+&= \mathbb{E}_q\left[\left(f(x)w(x)\right)^2\right] - \mathbb{E}_p[f(x)]^2 \\
 &\geq 0
 \end{align*}
 $$
 
-To minimize the variance, we only need to minimize $\mathbb{E}_{x\sim q}\left[\left(f(x)w(x)\right)^2\right]$ because $\mathbb{E}_{x\sim p}[f(x)]^2$ does not depend on $q$. According to Jensen's inequality,
+To minimize the variance, we only need to minimize $\mathbb{E}_q\left[\left(f(x)w(x)\right)^2\right]$ because $\mathbb{E}_p[f(x)]^2$ does not depend on $q$. According to Jensen's inequality,
 
 $$
 \begin{align*}
-\mathbb{E}_{x\sim q}\left[\left(f(x)w(x)\right)^2\right]
-&\geq \mathbb{E}_{x\sim q}[\vert f(x)\vert w(x)]^2 \\
+\mathbb{E}_q\left[\left(f(x)w(x)\right)^2\right]
+&\geq \mathbb{E}_q[\vert f(x)\vert w(x)]^2 \\
 &= \left(\int \vert f(x)\vert p(x)dx\right)^2 \\
-&= \mathbb{E}_{x\sim p}[\vert p(x)\vert]^2 \\
+&= \mathbb{E}_p[\vert p(x)\vert]^2 \\
 \end{align*}
 $$
 
@@ -167,18 +165,18 @@ If we can sample from this $q$ (and evaluate the corresponding weight), then we 
 Assume only $\tilde{p}(x)$ can be evaluated, we then define $w(x)\triangleq\tilde{p}(x)/q(x)$. We have
 
 $$
-X_p=\int \tilde{p}(x)dx=\int \frac{\tilde{p}(x)}{q(x)}q(x)dx=\mathbb{E}_{x\sim q}[w(x)]
+X_p=\int \tilde{p}(x)dx=\int \frac{\tilde{p}(x)}{q(x)}q(x)dx=\mathbb{E}_q[w(x)]
 $$
 
 As a result,
 
 $$
 \begin{align*}
-\mathbb{E}_{x\sim p}[f(x)]
+\mathbb{E}_p[f(x)]
 &= \int f(x)p(x)dx \\
 &= \frac{1}{X_p}\int f(x)\frac{\tilde{p}(x)}{q(x)}q(x)dx \\
-&= \frac{1}{X_p}\mathbb{E}_{x\sim q}[f(x)w(x)] \\
-&= \frac{\mathbb{E}_{x\sim q}[f(x)w(x)]}{\mathbb{E}_{x\sim q}[w(x)]} \\
+&= \frac{1}{X_p}\mathbb{E}_q[f(x)w(x)] \\
+&= \frac{\mathbb{E}_q[f(x)w(x)]}{\mathbb{E}_q[w(x)]} \\
 &\approx \frac{\sum_{i=1}^Nf(x^{(i)})w(x^{(i)})}{\sum_{i=1}^Nw(x^{(i)})} \\
 &= \sum_{i=1}^Nf(x^{(i)})\tilde{w}(x^{(i)})
 \end{align*}
@@ -189,24 +187,24 @@ where $\tilde{w}(x^{(i)})$ is the normalized importance weight.
 Drawback: the normalized importance sampling estimator is biased. When $N=1$,
 
 $$
-\mathbb{E}_{x\sim q}\left[\hat{\mathbb{E}}_{x\sim p}[f(x)]\right]
-=\mathbb{E}_{x\sim q}\left[\frac{f(x)w(x)}{w(x)}\right]
-=\mathbb{E}_{x\sim q}[f(x)]\neq \mathbb{E}_{x\sim p}[f(x)]
+\mathbb{E}_q\left[\hat{\mathbb{E}}_p[f(x)]\right]
+=\mathbb{E}_q\left[\frac{f(x)w(x)}{w(x)}\right]
+=\mathbb{E}_q[f(x)]\neq \mathbb{E}_p[f(x)]
 $$
 
 Fortunately, because the numerator and denominator are both unbiased, the normalized importance sampling estimator remains asymptotically unbiased.
 
-### Example: Approximate posterior probability $p(x_i|e)$ (discrete space)
+### Example: Approximate posterior probability $p(x_m|e)$ (discrete space)
 
 Denote posterior probabilities $p_e(z)\triangleq p(z|e)$ and $\tilde{p}_e(z)\triangleq p(z,e)$. We then have
 
 $$
 \begin{align*}
-p(x_i|e)
-&= p_e(x_i) \\
-&= \sum_z\mathbb{1}_{x_i}(z)p_e(z) \\
-&= \mathbb{E}_{z\sim p_e}[\mathbb{1}_{x_i}(z)]  \\
-&\approx \sum_{i=1}^N\mathbb{1}_{x_i}(z)\tilde{w}(z^{(i)})
+p(x_m|e)
+&= p_e(x_m) \\
+&= \sum_z\delta_{x_m}(z)p_e(z) \\
+&= \mathbb{E}_{p_e}[\delta_{x_m}(z)]  \\
+&\approx \sum_{n=1}^N\delta_{x_m}(z)\tilde{w}(z^{(n)})
 \end{align*}
 $$
 
