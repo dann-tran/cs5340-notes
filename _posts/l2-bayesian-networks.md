@@ -98,6 +98,8 @@ However, $X_2$, $X_3$ are not $d$-separated given $X_1$, $X_6$ due to an active 
 
 #### Markov blanket (MB)
 
+We define the Markov blanket $U$ of a variable $X$ as the minimal set of nodes s.t. $X$ is independent of the rest of the graph if $U$ is observed.
+
 The MB of a node $X_i$ comprises the set of its parents, children, and co-parents. Conditional distributional of $X_i$, conditioend on all remaining variables in the graph, is dependent only the variables in the MB.
 
 #### Independence map
@@ -125,3 +127,8 @@ Reason:
 
 - Cascade and common parent structures encode the same dependencies. Directions of the arrows can e changed as long as we don't turn them into a v-structure.
 - v-structure is the only one that describes $X\not\perp Y|Z$.
+
+## Reference materials
+
+- Jordan, M. I. (2003). Chapter 2: Conditional Independence and Factorization. In _An Introduction to Probabilistic Graphical Models_.
+- Kuleshov, V. and Ermon, S. (2021). _Bayesian networks_. CS228 notes. https://ermongroup.github.io/cs228-notes/representation/undirected/
