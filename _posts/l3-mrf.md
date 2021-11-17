@@ -175,4 +175,6 @@ and the label bias problem no longer exists because $y_t$ does not block informa
 
 ## Reference materials
 
+- Jordan, M. I. (2003). Chapter 2: Conditional Independence and Factorization. In _An Introduction to Probabilistic Graphical Models_.
+- Murphy, K. P. (2012). Chapter 19: Undirected graphcial models (Markov random fields). In _Machine Learning: A Probabilistic Perspective_. The MIT Press.
 - Kuleshov, V. and Ermon, S. (2020). _Markov random fields_. CS228 notes. https://ermongroup.github.io/cs228-notes/representation/undirected/

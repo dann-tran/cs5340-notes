@@ -181,5 +181,5 @@ However, since the objective is non-convex, we have no gurantee to find the glob
 
 ## Reference materials
 
-- Murphy, K. P. "Mixture Models and the EM Algorithm." _Machine Learning: A Probabilistic Perspective_.
-- Kuleshov, V. and Ermon, S. "Learning in latent variable models." _cs228-notes_. Accessed Nov 5, 2021. https://ermongroup.github.io/cs228-notes/learning/latent/.
+- Murphy, K. P. (2012). Chapter 11: Mixture Models and the EM Algorithm. In _Machine Learning: A Probabilistic Perspective_. The MIT Press.
+- Kuleshov, V. and Ermon, S. _Learning in latent variable models_. CS228 notes. https://ermongroup.github.io/cs228-notes/learning/latent/.
