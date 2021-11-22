@@ -2,10 +2,10 @@ import Layout from 'components/Layout';
 import { GetStaticPropsResult } from 'next';
 import Link from 'next/link';
 import React from 'react';
+import styles from 'styles/Home.module.css';
 
 import { getAllPostMetadata } from '../lib/api';
 import { Metadata } from '../lib/models';
-import styles from 'styles/Home.module.css';
 
 const IndexPage: React.FC<{ metadataList: Metadata[] }> = ({
   metadataList,
@@ -16,10 +16,10 @@ const IndexPage: React.FC<{ metadataList: Metadata[] }> = ({
       <div>Dan N. Tran</div>
       <section>
         <p>
-          This site is my notes for the NUS course CS5340. The notes are
-          compiled from various textbooks and lecture/course notes on the topic
-          of probabilistic graphical modelling (PGM). Relevant source materials
-          are credited at the end of each page in this site.
+          This site is my incomplete notes for the NUS course CS5340. The notes
+          are compiled from various textbooks and lecture/course notes on the
+          topic of probabilistic graphical modelling (PGM). Relevant source
+          materials are credited at the end of each page in this site.
         </p>
         <p>
           The content and organisation of the topics closely follow the course
