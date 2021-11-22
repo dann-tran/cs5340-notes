@@ -367,6 +367,8 @@ We can approximate the model expectations using MC sampling.
 
 ---
 
+## CRFs
+
 ## Reference materials
 
 - Prince, S. J. D. (2012). Chapter 4: Fitting probability models. In _Computer Vision: Models, Learning, and Inference_ (pp. 28-43). Cambridge University Press.

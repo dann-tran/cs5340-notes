@@ -137,7 +137,7 @@ $$
 
 #### M-step
 
-We optimize $\mathcal{Q}$ w.r.t $\bm\theta=\{\pi_k, \bm\mu_k, \bm\Sigma_k\}_{k=1}^K$. For $\bm\pi$, we obviously have
+We optimize $\mathcal{Q}$ w.r.t $\bm\theta=\{\pi_k, \bm\mu_k, \bm\Sigma_k\}_{k=1}^K$. For $\bm\pi$, using the method of Lagrange multiplier for the constraint $\sum_k\pi_k=1$ which requires us to u, we have
 
 $$
 \pi_k=\frac 1 N\sum_n r_{nk}=\frac {r_k} N
